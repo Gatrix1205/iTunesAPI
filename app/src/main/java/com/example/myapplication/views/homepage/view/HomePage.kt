@@ -4,11 +4,15 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -32,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.common.extensions.ToHeight
+import com.example.myapplication.views.homepage.view.composables.EntityComposable
 import com.example.myapplication.views.homepage.viewmodel.HomePageState
 import com.example.myapplication.views.homepage.viewmodel.HomePageStatus
 import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
@@ -44,6 +49,10 @@ fun HomeScreen( viewModel: HomePageViewModel){
     var text by remember { mutableStateOf("") }
     val homePageState by remember{
         mutableStateOf(viewModel.stateVal.value)
+    }
+
+    val entities by remember {
+        mutableStateOf(viewModel.entityList)
     }
 
     when(homePageState){
@@ -110,6 +119,20 @@ fun HomeScreen( viewModel: HomePageViewModel){
                         "Specify the parameter for the content to be searched",
                         modifier = Modifier.padding(vertical = 25.dp)
                     )
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        LazyVerticalGrid(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalArrangement = Arrangement.Center ,
+                            columns = GridCells.Adaptive(minSize =110.dp)
+                        ) {
+                            items(entities.value){
+                                EntityComposable(entityItemModel = it, viewModel)
+                            }
+                        }
+                    }
+                    20.ToHeight()
                     TextButton(
                         modifier = Modifier.fillMaxWidth().background(
                             color = Color.Gray
