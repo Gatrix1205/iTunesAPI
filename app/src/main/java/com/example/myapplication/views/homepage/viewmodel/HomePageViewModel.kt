@@ -24,7 +24,7 @@ class HomePageViewModel : ViewModel(){
     )
     var stateVal = _response
     private val iTunesApiService : ITunesApiService = apiService.create(ITunesApiService::class.java)
-    val entityList : MutableStateFlow<List<EntityItemModel>> = MutableStateFlow(listOf(
+    val entityList : List<EntityItemModel> = (listOf(
         EntityItemModel(
             id = 0,
             isSelected = false,
@@ -77,13 +77,6 @@ class HomePageViewModel : ViewModel(){
         }
     }
 
-    fun updatedList(id : Int, isSelected : Boolean){
-        entityList.value.forEach {
-            if(it.id == id){
-                it.isSelected = isSelected
-            }
-        }
-    }
 }
 
 

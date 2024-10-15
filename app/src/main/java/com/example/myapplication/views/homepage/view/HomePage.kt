@@ -51,9 +51,7 @@ fun HomeScreen( viewModel: HomePageViewModel){
         mutableStateOf(viewModel.stateVal.value)
     }
 
-    val entities by remember {
-        mutableStateOf(viewModel.entityList)
-    }
+    val entities = viewModel.entityList
 
     when(homePageState){
         is HomePageState.HomePageLoading -> {
@@ -70,6 +68,8 @@ fun HomeScreen( viewModel: HomePageViewModel){
                     Log.i("TAG", "HomeScreen: ${it.trackName}")
                 }
             }
+
+
             Scaffold(
                 modifier = Modifier
                     .background(
@@ -127,8 +127,8 @@ fun HomeScreen( viewModel: HomePageViewModel){
                             horizontalArrangement = Arrangement.Center ,
                             columns = GridCells.Adaptive(minSize =110.dp)
                         ) {
-                            items(entities.value){
-                                EntityComposable(entityItemModel = it, viewModel)
+                            items(entities){
+                                EntityComposable(entityItemModel = it)
                             }
                         }
                     }
