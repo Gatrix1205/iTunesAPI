@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.common.extensions.ToHeight
+import com.example.myapplication.common.extensions.toTitleCase
+import com.example.myapplication.views.homepage.data.models.EntityItemModel
 import com.example.myapplication.views.homepage.view.composables.EntityComposable
 import com.example.myapplication.views.homepage.viewmodel.HomePageState
 import com.example.myapplication.views.homepage.viewmodel.HomePageStatus
@@ -125,7 +127,7 @@ fun HomeScreen( viewModel: HomePageViewModel){
                         LazyVerticalGrid(
                             verticalArrangement = Arrangement.Center,
                             horizontalArrangement = Arrangement.Center ,
-                            columns = GridCells.Adaptive(minSize =110.dp)
+                            columns = GridCells.Fixed(count = 4)
                         ) {
                             items(entities){
                                 EntityComposable(entityItemModel = it)
@@ -138,7 +140,13 @@ fun HomeScreen( viewModel: HomePageViewModel){
                             color = Color.Gray
                         ),
                         onClick = {
-                            viewModel.getAlbumDetails()
+
+                            val filteredList : List<String> = entities.map (
+                                fun(item : EntityItemModel) : String{
+                                    return item.name.name.toTitleCase()
+                                }
+                            )
+                            viewModel.getAlbumDetails(text, filteredList)
                         }
                     ) {
                         Text(text = "Submit")
