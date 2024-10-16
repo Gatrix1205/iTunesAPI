@@ -6,5 +6,5 @@ import retrofit2.http.Query
 interface ITunesApiService {
 
     @GET("search")
-    suspend fun getAlbumDetails(@Query("term") term: String): ItunesModel
+    suspend fun getAlbumDetails(@Query("term") term: String, @Query("entity") entity: String): ItunesModel
 }

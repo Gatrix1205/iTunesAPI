@@ -13,3 +13,7 @@ fun Int.ToHeight(){
         modifier = Modifier.height(this.dp)
     )
 }
+
+fun String.toTitleCase(): String {
+    return this.replaceFirstChar {this[0].uppercase() }
+}

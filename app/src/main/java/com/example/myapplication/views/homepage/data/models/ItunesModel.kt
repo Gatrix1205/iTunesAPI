@@ -13,7 +13,7 @@ data class Results (
 
     @SerializedName("genreIds"          ) var genreIds          : ArrayList<String> = arrayListOf(),
     @SerializedName("releaseDate"       ) var releaseDate       : String?           = null,
-    @SerializedName("trackId"           ) var trackId           : Int?              = null,
+    @SerializedName("trackId"           ) var trackId           : Long?              = null,
     @SerializedName("trackName"         ) var trackName         : String?           = null,
     @SerializedName("artistIds"         ) var artistIds         : ArrayList<Int>    = arrayListOf(),
     @SerializedName("kind"              ) var kind              : String?           = null,
