@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,46 +44,47 @@ import com.example.myapplication.views.homepage.viewmodel.HomePageState
 import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
 
 
-
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun HomeScreen( viewModel: HomePageViewModel ){
+fun HomeScreen(viewModel: HomePageViewModel) {
     var text by remember { mutableStateOf("") }
-    val homePageState by remember{
-        mutableStateOf(viewModel.stateVal.value)
-    }
+    val homePageState by viewModel.stateVal
 
     val entities = viewModel.entityList
     val ctx = LocalContext.current
 
-    when(homePageState){
-        is HomePageState.HomePageLoading -> {
-            CircularProgressIndicator(
-                modifier = Modifier.fillMaxSize()
+
+    Scaffold(
+        modifier = Modifier
+            .background(
+                color = Color.Black
             )
-        }
-        is HomePageState.HomePageFailure -> {
-            Text(text = (homePageState as HomePageState.HomePageFailure).msg)
-        }
-        is HomePageState.HomePageSuccess -> {
+    ) {
 
-            Scaffold(
-                modifier = Modifier
-                    .background(
-                        color = Color.Black
-                    )
-            ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    horizontal = 16.dp
+                )
+        ) {
+            when (homePageState) {
+                is HomePageState.HomePageLoading -> {
+                    CircularProgressIndicator(
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize().padding(
-                        horizontal = 16.dp
                     )
-                ) {
+                }
+
+                is HomePageState.HomePageFailure -> {
+                    Text(text = (homePageState as HomePageState.HomePageFailure).msg)
+                }
+
+                is HomePageState.HomePageSuccess -> {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Icon(
                             painter = painterResource(
                                 id = R.drawable.baseline_settings_applications_24
@@ -92,7 +94,8 @@ fun HomeScreen( viewModel: HomePageViewModel ){
                         Text(text = "iTunes")
                     }
                     25.ToHeight()
-                    Text("Search from a variety of contents from Itunes store including iBooks, movies, podcast, music, music videos and audiobooks"
+                    Text(
+                        "Search from a variety of contents from Itunes store including iBooks, movies, podcast, music, music videos and audiobooks"
                     )
                     20.ToHeight()
                     TextField(
@@ -100,7 +103,7 @@ fun HomeScreen( viewModel: HomePageViewModel ){
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Done,
 
-                        ),
+                            ),
                         modifier = Modifier.fillMaxWidth(),
                         value = text,
                         onValueChange = {
@@ -120,29 +123,32 @@ fun HomeScreen( viewModel: HomePageViewModel ){
                     )
                     Box(
                         modifier = Modifier.fillMaxWidth()
-                    ){
+                    ) {
                         LazyVerticalGrid(
                             verticalArrangement = Arrangement.Center,
-                            horizontalArrangement = Arrangement.Center ,
+                            horizontalArrangement = Arrangement.Center,
                             columns = GridCells.Fixed(count = 4)
                         ) {
-                            items(entities){
+                            items(entities) {
                                 EntityComposable(entityItemModel = it)
                             }
                         }
                     }
                     20.ToHeight()
                     TextButton(
-                        modifier = Modifier.fillMaxWidth().background(
-                            color = Color.LightGray
-                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = Color.LightGray
+                            ),
                         onClick = {
                             val filteredList: List<EntityType> = entities.filter {
                                 it.isSelected
                             }.map { it.name }
-                            if(text.isEmpty() || filteredList.isEmpty()){
-                                Toast.makeText(ctx,"Please enter artist name" , Toast.LENGTH_LONG).show()
-                            }else {
+                            if (text.isEmpty() || filteredList.isEmpty()) {
+                                Toast.makeText(ctx, "Please enter artist name", Toast.LENGTH_LONG)
+                                    .show()
+                            } else {
                                 viewModel.getAlbumDetails(text, filteredList)
                             }
                         }
@@ -157,10 +163,9 @@ fun HomeScreen( viewModel: HomePageViewModel ){
 }
 
 
-
 @SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenPreview(){
+fun HomeScreenPreview() {
     HomeScreen(viewModel = HomePageViewModel())
 }

@@ -1,5 +1,7 @@
 package com.example.myapplication.views.homepage.viewmodel
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.common.extensions.toSmallerCase
@@ -11,9 +13,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.State
 
 enum class HomePageStatus{
     SUCCESS, FAILURE
@@ -25,10 +26,10 @@ enum class EntityType{
 
 class HomePageViewModel : ViewModel(){
     private val apiService = RetrofitBuilder.retrofit
-     private var _response  : MutableStateFlow<HomePageState>  = MutableStateFlow(
+     private var _response  : MutableState<HomePageState> = mutableStateOf(
        HomePageState.HomePageSuccess(null, null)
     )
-    var stateVal = _response.asStateFlow()
+    var stateVal:State<HomePageState> = _response
     private val iTunesApiService : ITunesApiService = apiService.create(ITunesApiService::class.java)
     val entityList : List<EntityItemModel> = (listOf(
         EntityItemModel(
@@ -77,10 +78,10 @@ class HomePageViewModel : ViewModel(){
 
 
      fun getAlbumDetails(name: String, entityList : List<EntityType>){
+         if(stateVal.value==HomePageState.HomePageLoading) return
         viewModelScope.launch {
             try{
                 _response.value = HomePageState.HomePageLoading
-                _response.emit(HomePageState.HomePageLoading)
                 val responseModels : MutableMap<EntityType, ItunesModel> = mutableMapOf(
 
                 )
@@ -169,11 +170,9 @@ class HomePageViewModel : ViewModel(){
                         responseModels
                     )
                 }
-                _response.emit(HomePageState.HomePageSuccess(HomePageStatus.SUCCESS, responseModels))
 
             }catch (e: Exception){
                 _response.value = HomePageState.HomePageFailure(e.message.toString(), HomePageStatus.FAILURE)
-                _response.emit(HomePageState.HomePageFailure(e.message.toString(), HomePageStatus.FAILURE))
             }
         }
     }
@@ -183,6 +182,8 @@ class HomePageViewModel : ViewModel(){
 
 
 sealed class HomePageState{
+
+
     class HomePageSuccess(val state: HomePageStatus?, val iTunesModels : MutableMap<EntityType, ItunesModel>?) : HomePageState()
     data object HomePageLoading : HomePageState()
     class HomePageFailure(val msg : String, val state: HomePageStatus) : HomePageState()
