@@ -14,6 +14,6 @@ fun Int.ToHeight(){
     )
 }
 
-fun String.toTitleCase(): String {
-    return this.replaceFirstChar {this[0].uppercase() }
+fun String.toSmallerCase(): String {
+    return this.replaceFirstChar {this[0].lowercase() }
 }

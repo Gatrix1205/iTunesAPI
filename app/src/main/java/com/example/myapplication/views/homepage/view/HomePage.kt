@@ -1,7 +1,7 @@
 package com.example.myapplication.views.homepage.view
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,24 +37,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.common.extensions.ToHeight
-import com.example.myapplication.common.extensions.toTitleCase
-import com.example.myapplication.views.homepage.data.models.EntityItemModel
 import com.example.myapplication.views.homepage.view.composables.EntityComposable
+import com.example.myapplication.views.homepage.viewmodel.EntityType
 import com.example.myapplication.views.homepage.viewmodel.HomePageState
-import com.example.myapplication.views.homepage.viewmodel.HomePageStatus
 import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
 
 
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun HomeScreen( viewModel: HomePageViewModel){
+fun HomeScreen( viewModel: HomePageViewModel ){
     var text by remember { mutableStateOf("") }
     val homePageState by remember{
         mutableStateOf(viewModel.stateVal.value)
     }
 
     val entities = viewModel.entityList
+    val ctx = LocalContext.current
 
     when(homePageState){
         is HomePageState.HomePageLoading -> {
@@ -65,12 +65,6 @@ fun HomeScreen( viewModel: HomePageViewModel){
             Text(text = (homePageState as HomePageState.HomePageFailure).msg)
         }
         is HomePageState.HomePageSuccess -> {
-            if((homePageState as HomePageState.HomePageSuccess).state== HomePageStatus.SUCCESS){
-                (homePageState as HomePageState.HomePageSuccess).iTunesModel?.results?.forEach {
-                    Log.i("TAG", "HomeScreen: ${it.trackName}")
-                }
-            }
-
 
             Scaffold(
                 modifier = Modifier
@@ -104,17 +98,20 @@ fun HomeScreen( viewModel: HomePageViewModel){
                     TextField(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done
+                            imeAction = ImeAction.Done,
+
                         ),
                         modifier = Modifier.fillMaxWidth(),
                         value = text,
                         onValueChange = {
                             text = it
                         },
-                        label = { },
+                        label = {
+                            Text("Search by Artist/Album")
+                        },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.Gray
+                            unfocusedContainerColor = Color.LightGray
                         )
                     )
                     Text(
@@ -137,16 +134,17 @@ fun HomeScreen( viewModel: HomePageViewModel){
                     20.ToHeight()
                     TextButton(
                         modifier = Modifier.fillMaxWidth().background(
-                            color = Color.Gray
+                            color = Color.LightGray
                         ),
                         onClick = {
-
-                            val filteredList : List<String> = entities.map (
-                                fun(item : EntityItemModel) : String{
-                                    return item.name.name.toTitleCase()
-                                }
-                            )
-                            viewModel.getAlbumDetails(text, filteredList)
+                            val filteredList: List<EntityType> = entities.filter {
+                                it.isSelected
+                            }.map { it.name }
+                            if(text.isEmpty() || filteredList.isEmpty()){
+                                Toast.makeText(ctx,"Please enter artist name" , Toast.LENGTH_LONG).show()
+                            }else {
+                                viewModel.getAlbumDetails(text, filteredList)
+                            }
                         }
                     ) {
                         Text(text = "Submit")
