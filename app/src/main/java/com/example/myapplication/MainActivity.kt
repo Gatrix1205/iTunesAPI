@@ -10,7 +10,7 @@ import com.example.myapplication.views.homepage.view.HomeScreen
 import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
 
 class MainActivity : ComponentActivity() {
-    private val viewModel : HomePageViewModel by viewModels()
+    private val viewModel: HomePageViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
