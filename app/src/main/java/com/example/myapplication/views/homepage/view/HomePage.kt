@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,17 +35,20 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.myapplication.R
 import com.example.myapplication.common.extensions.ToHeight
+import com.example.myapplication.common.routes.Screen
 import com.example.myapplication.views.homepage.view.composables.EntityComposable
 import com.example.myapplication.views.homepage.viewmodel.EntityType
 import com.example.myapplication.views.homepage.viewmodel.HomePageState
+import com.example.myapplication.views.homepage.viewmodel.HomePageStatus
 import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
 
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun HomeScreen(viewModel: HomePageViewModel) {
+fun HomeScreen(viewModel: HomePageViewModel, navController: NavController? = null) {
     var text by remember { mutableStateOf("") }
     val homePageState by viewModel.stateVal
 
@@ -82,6 +84,9 @@ fun HomeScreen(viewModel: HomePageViewModel) {
                 }
 
                 is HomePageState.HomePageSuccess -> {
+                    if((homePageState as HomePageState.HomePageSuccess).state == HomePageStatus.SUCCESS){
+                        navController?.navigate(Screen.DisplayScreen.name)
+                    }
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
