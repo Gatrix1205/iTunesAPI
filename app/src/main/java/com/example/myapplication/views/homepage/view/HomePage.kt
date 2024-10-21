@@ -84,81 +84,86 @@ fun HomeScreen(viewModel: HomePageViewModel, navController: NavController? = nul
                 }
 
                 is HomePageState.HomePageSuccess -> {
-                    if((homePageState as HomePageState.HomePageSuccess).state == HomePageStatus.SUCCESS){
+                    if ((homePageState as HomePageState.HomePageSuccess).state == HomePageStatus.SUCCESS) {
                         navController?.navigate(Screen.DisplayScreen.name)
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.baseline_settings_applications_24
-                            ),
-                            contentDescription = null
-                        )
-                        Text(text = "iTunes")
-                    }
-                    25.ToHeight()
-                    Text(
-                        "Search from a variety of contents from Itunes store including iBooks, movies, podcast, music, music videos and audiobooks"
-                    )
-                    20.ToHeight()
-                    TextField(
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done,
-
-                            ),
-                        modifier = Modifier.fillMaxWidth(),
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        label = {
-                            Text("Search by Artist/Album")
-                        },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.LightGray
-                        )
-                    )
-                    Text(
-                        "Specify the parameter for the content to be searched",
-                        modifier = Modifier.padding(vertical = 25.dp)
-                    )
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        LazyVerticalGrid(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalArrangement = Arrangement.Center,
-                            columns = GridCells.Fixed(count = 4)
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            items(entities) {
-                                EntityComposable(entityItemModel = it)
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.baseline_settings_applications_24
+                                ),
+                                contentDescription = null
+                            )
+                            Text(text = "iTunes")
+                        }
+                        25.ToHeight()
+                        Text(
+                            "Search from a variety of contents from Itunes store including iBooks, movies, podcast, music, music videos and audiobooks"
+                        )
+                        20.ToHeight()
+                        TextField(
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done,
+
+                                ),
+                            modifier = Modifier.fillMaxWidth(),
+                            value = text,
+                            onValueChange = {
+                                text = it
+                            },
+                            label = {
+                                Text("Search by Artist/Album")
+                            },
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color.LightGray
+                            )
+                        )
+                        Text(
+                            "Specify the parameter for the content to be searched",
+                            modifier = Modifier.padding(vertical = 25.dp)
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            LazyVerticalGrid(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalArrangement = Arrangement.Center,
+                                columns = GridCells.Fixed(count = 4)
+                            ) {
+                                items(entities) {
+                                    EntityComposable(entityItemModel = it)
+                                }
                             }
                         }
-                    }
-                    20.ToHeight()
-                    TextButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = Color.LightGray
-                            ),
-                        onClick = {
-                            val filteredList: List<EntityType> = entities.filter {
-                                it.isSelected
-                            }.map { it.name }
-                            if (text.isEmpty() || filteredList.isEmpty()) {
-                                Toast.makeText(ctx, "Please enter artist name", Toast.LENGTH_LONG)
-                                    .show()
-                            } else {
-                                viewModel.getAlbumDetails(text, filteredList)
+                        20.ToHeight()
+                        TextButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = Color.LightGray
+                                ),
+                            onClick = {
+                                val filteredList: List<EntityType> = entities.filter {
+                                    it.isSelected
+                                }.map { it.name }
+                                if (text.isEmpty() || filteredList.isEmpty()) {
+                                    Toast.makeText(
+                                        ctx,
+                                        "Please enter artist name",
+                                        Toast.LENGTH_LONG
+                                    )
+                                        .show()
+                                } else {
+                                    viewModel.getAlbumDetails(text, filteredList)
+                                }
                             }
+                        ) {
+                            Text(text = "Submit")
                         }
-                    ) {
-                        Text(text = "Submit")
                     }
                 }
             }
