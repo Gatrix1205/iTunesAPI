@@ -22,6 +22,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -85,7 +86,9 @@ fun HomeScreen(viewModel: HomePageViewModel, navController: NavController? = nul
 
                 is HomePageState.HomePageSuccess -> {
                     if ((homePageState as HomePageState.HomePageSuccess).state == HomePageStatus.SUCCESS) {
-                        navController?.navigate(Screen.DisplayScreen.name)
+                        LaunchedEffect(Unit) {
+                            navController?.navigate(Screen.DisplayScreen.name)
+                        }
                     } else {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
