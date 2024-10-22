@@ -1,4 +1,5 @@
 package com.example.myapplication.views.homepage.viewmodel
+
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -16,22 +17,22 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.State
 
-enum class HomePageStatus{
+enum class HomePageStatus {
     SUCCESS, FAILURE
 }
 
-enum class EntityType{
-    Movie , Podcast,MusicVideo, Audiobook, ShortFilm,TvShow, Software, Ebook
+enum class EntityType {
+    Movie, Podcast, MusicVideo, Audiobook, ShortFilm, TvShow, Software, Ebook
 }
 
-class HomePageViewModel : ViewModel(){
+class HomePageViewModel : ViewModel() {
     private val apiService = RetrofitBuilder.retrofit
-     private var _response  : MutableState<HomePageState> = mutableStateOf(
-       HomePageState.HomePageSuccess(null, null)
+    private var _response: MutableState<HomePageState> = mutableStateOf(
+        HomePageState.HomePageSuccess(null)
     )
-    var stateVal:State<HomePageState> = _response
-    private val iTunesApiService : ITunesApiService = apiService.create(ITunesApiService::class.java)
-    val entityList : List<EntityItemModel> = (listOf(
+    var stateVal: State<HomePageState> = _response
+    private val iTunesApiService: ITunesApiService = apiService.create(ITunesApiService::class.java)
+    val entityList: List<EntityItemModel> = (listOf(
         EntityItemModel(
             id = 0,
             isSelected = false,
@@ -43,17 +44,17 @@ class HomePageViewModel : ViewModel(){
             name = EntityType.Podcast
         ),
         EntityItemModel(
-            id =3,
+            id = 3,
             isSelected = false,
             name = EntityType.MusicVideo
         ),
         EntityItemModel(
-            id =4,
+            id = 4,
             isSelected = false,
-            name =EntityType.Audiobook
+            name = EntityType.Audiobook
         ),
         EntityItemModel(
-            id =5,
+            id = 5,
             isSelected = false,
             name = EntityType.ShortFilm
         ),
@@ -73,18 +74,17 @@ class HomePageViewModel : ViewModel(){
             name = EntityType.Ebook
         ),
 
-    ))
+        ))
+    val responseModels: MutableMap<EntityType, ItunesModel> = mutableMapOf(
+
+    )
 
 
-
-     fun getAlbumDetails(name: String, entityList : List<EntityType>){
-         if(stateVal.value==HomePageState.HomePageLoading) return
+    fun getAlbumDetails(name: String, entityList: List<EntityType>) {
+        if (stateVal.value == HomePageState.HomePageLoading) return
         viewModelScope.launch {
-            try{
+            try {
                 _response.value = HomePageState.HomePageLoading
-                val responseModels : MutableMap<EntityType, ItunesModel> = mutableMapOf(
-
-                )
                 var iTunesModelEbook: Deferred<ItunesModel>? = null
                 var iTunesModelMovie: Deferred<ItunesModel>? = null
                 var iTunesModelPodcast: Deferred<ItunesModel>? = null
@@ -95,30 +95,45 @@ class HomePageViewModel : ViewModel(){
                 var iTunesModelSoftware: Deferred<ItunesModel>? = null
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    for(entity in entityList){
-                        when(entity){
+                    for (entity in entityList) {
+                        when (entity) {
                             EntityType.Ebook -> {
                                 iTunesModelEbook = async {
-                                    iTunesApiService.getAlbumDetails(name, entity.name.toSmallerCase())
+                                    iTunesApiService.getAlbumDetails(
+                                        name,
+                                        entity.name.toSmallerCase()
+                                    )
                                 }
                             }
 
                             EntityType.Movie -> {
                                 iTunesModelMovie = async {
-                                    iTunesApiService.getAlbumDetails(name, entity.name.toSmallerCase())
+                                    iTunesApiService.getAlbumDetails(
+                                        name,
+                                        entity.name.toSmallerCase()
+                                    )
                                 }
                             }
+
                             EntityType.Podcast -> {
                                 iTunesModelPodcast = async {
-                                    iTunesApiService.getAlbumDetails(name, entity.name.toSmallerCase())
+                                    iTunesApiService.getAlbumDetails(
+                                        name,
+                                        entity.name.toSmallerCase()
+                                    )
                                 }
 
                             }
+
                             EntityType.MusicVideo -> {
                                 iTunesModelMusicVideo = async {
-                                    iTunesApiService.getAlbumDetails(name, entity.name.toSmallerCase())
+                                    iTunesApiService.getAlbumDetails(
+                                        name,
+                                        entity.name.toSmallerCase()
+                                    )
                                 }
                             }
+
                             EntityType.Audiobook -> {
                                 iTunesModelAudiobook = async {
                                     iTunesApiService.getAlbumDetails(
@@ -127,52 +142,64 @@ class HomePageViewModel : ViewModel(){
                                     )
                                 }
                             }
+
                             EntityType.ShortFilm -> {
                                 iTunesModelShortFilm = async {
-                                    iTunesApiService.getAlbumDetails(name, entity.name.toSmallerCase())
+                                    iTunesApiService.getAlbumDetails(
+                                        name,
+                                        entity.name.toSmallerCase()
+                                    )
                                 }
                             }
+
                             EntityType.TvShow -> {
-                                 iTunesModelTvShow = async {
-                                    iTunesApiService.getAlbumDetails(name, entity.name.toSmallerCase())
+                                iTunesModelTvShow = async {
+                                    iTunesApiService.getAlbumDetails(
+                                        name,
+                                        entity.name.toSmallerCase()
+                                    )
                                 }
                             }
+
                             EntityType.Software -> {
                                 iTunesModelSoftware = async {
-                                    iTunesApiService.getAlbumDetails(name, entity.name.toSmallerCase())
+                                    iTunesApiService.getAlbumDetails(
+                                        name,
+                                        entity.name.toSmallerCase()
+                                    )
 
                                 }
                             }
                         }
-                        iTunesModelEbook?.await()?.let { responseModels.put(EntityType.Ebook , it) }
-                        iTunesModelMovie?.await()?.let { responseModels.put(EntityType.Movie , it) }
+                        iTunesModelEbook?.await()?.let { responseModels.put(EntityType.Ebook, it) }
+                        iTunesModelMovie?.await()?.let { responseModels.put(EntityType.Movie, it) }
                         iTunesModelPodcast?.await()
-                            ?.let { responseModels.put(EntityType.Podcast , it) }
+                            ?.let { responseModels.put(EntityType.Podcast, it) }
                         iTunesModelMusicVideo?.await()
-                            ?.let { responseModels.put(EntityType.MusicVideo , it) }
+                            ?.let { responseModels.put(EntityType.MusicVideo, it) }
                         iTunesModelAudiobook?.await()
-                            ?.let { responseModels.put(EntityType.Audiobook , it) }
+                            ?.let { responseModels.put(EntityType.Audiobook, it) }
                         iTunesModelShortFilm?.await()
-                            ?.let { responseModels.put(EntityType.ShortFilm , it) }
+                            ?.let { responseModels.put(EntityType.ShortFilm, it) }
                         iTunesModelTvShow?.await()
-                            ?.let { responseModels.put(EntityType.TvShow , it) }
+                            ?.let { responseModels.put(EntityType.TvShow, it) }
                         iTunesModelSoftware?.await()
-                            ?.let { responseModels.put(EntityType.Software , it) }
+                            ?.let { responseModels.put(EntityType.Software, it) }
 
                     }
                     Log.i("Map size", responseModels.size.toString())
-                    for(response in responseModels){
-                        Log.i("Values" , response.value.toString())
+                    for (response in responseModels) {
+                        Log.i("Values", response.value.toString())
                     }
 
                     _response.value = HomePageState.HomePageSuccess(
-                        HomePageStatus.SUCCESS,
-                        responseModels
+                        HomePageStatus.SUCCESS
                     )
                 }
 
-            }catch (e: Exception){
-                _response.value = HomePageState.HomePageFailure(e.message.toString(), HomePageStatus.FAILURE)
+            } catch (e: Exception) {
+                _response.value =
+                    HomePageState.HomePageFailure(e.message.toString())
             }
         }
     }
@@ -180,13 +207,15 @@ class HomePageViewModel : ViewModel(){
 }
 
 
+sealed class HomePageState {
 
-sealed class HomePageState{
 
+    class HomePageSuccess(
+        val state: HomePageStatus?
+    ) : HomePageState()
 
-    class HomePageSuccess(val state: HomePageStatus?, val iTunesModels : MutableMap<EntityType, ItunesModel>?) : HomePageState()
     data object HomePageLoading : HomePageState()
-    class HomePageFailure(val msg : String, val state: HomePageStatus) : HomePageState()
+    class HomePageFailure(val msg: String) : HomePageState()
 
 }
 
