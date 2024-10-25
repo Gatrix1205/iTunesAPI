@@ -2,9 +2,12 @@ package com.example.myapplication.views.albums.view
 
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -23,8 +26,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
@@ -36,7 +41,7 @@ import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
 
 fun DisplayScreen(viewModel: HomePageViewModel, navController: NavController) {
 //    val mapVal: Map<EntityType, ItunesModel> = viewModel.responseModels
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    var selectedIndex by remember { mutableIntStateOf(1) }
     val tabs = listOf("Grid Layout", "List Layout")
     Scaffold(
         topBar = {
@@ -71,11 +76,30 @@ fun DisplayScreen(viewModel: HomePageViewModel, navController: NavController) {
             TabRow(
                 containerColor = Color.White,
                 selectedTabIndex = selectedIndex,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .padding(vertical = 4.dp, horizontal = 8.dp)
+                    .clip(RoundedCornerShape(25))
+                    .padding(1.dp).fillMaxWidth().background(Color.Red),
+                indicator = {
+                    Box{}
+                }
                 ) {
                 tabs.forEachIndexed { index, title ->
+                    val selected = selectedIndex == index
                     Tab(
-                        selected = selectedIndex == index,
+                        modifier = if (selected) Modifier
+                            .clip(RoundedCornerShape(25))
+                            .background(
+                                Color.Gray
+                            )
+                        else Modifier
+                            .clip(RoundedCornerShape(25))
+                            .background(
+                                Color(
+                                    0xff1E76DA
+                                )
+                            ),
+                        selected = selected,
                         onClick = { selectedIndex = index },
                         text = { Text(title, color = Color.Black) }
                     )
@@ -83,7 +107,7 @@ fun DisplayScreen(viewModel: HomePageViewModel, navController: NavController) {
             }
             when(selectedIndex){
                 0 -> AlbumGridView()
-                1 -> AlbumListView()
+                1 -> AlbumListView(items = viewModel.responseModels)
             }
         }
     }
@@ -95,24 +119,4 @@ fun DisplayScreenPreview() {
     DisplayScreen(viewModel = HomePageViewModel(), rememberNavController())
 }
 
-@Composable
-fun TabScreen() {
-    var tabIndex by remember { mutableIntStateOf(0) }
 
-    val tabs = listOf("Home", "About", "Settings")
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        TabRow(selectedTabIndex = tabIndex) {
-            tabs.forEachIndexed { index, title ->
-                Tab(text = { Text(title) },
-                    selected = tabIndex == index,
-                    onClick = { tabIndex = index }
-                )
-            }
-        }
-        when (tabIndex) {
-            0 -> AlbumGridView()
-            1 -> AlbumListView()
-        }
-    }
-}
