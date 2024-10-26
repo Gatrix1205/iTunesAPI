@@ -28,7 +28,7 @@ fun AppNavHost(
             HomeScreen(viewModel, navController)
         }
         composable(NavigationItem.Display.route) {
-            DisplayScreen(viewModel)
+            DisplayScreen(viewModel, navController)
         }
     }
 }

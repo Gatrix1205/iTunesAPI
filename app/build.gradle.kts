@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)
     implementation(libs.kotlinx.coroutines.android)
+    implementation (libs.compose.v100beta01)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
