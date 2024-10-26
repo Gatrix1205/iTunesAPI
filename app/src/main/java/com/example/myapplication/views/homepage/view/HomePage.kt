@@ -32,12 +32,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.myapplication.R
+import com.example.myapplication.common.Constants
 import com.example.myapplication.common.extensions.ToHeight
 import com.example.myapplication.common.routes.Screen
 import com.example.myapplication.views.homepage.view.composables.EntityComposable
@@ -99,11 +102,18 @@ fun HomeScreen(viewModel: HomePageViewModel, navController: NavController? = nul
                                 ),
                                 contentDescription = null
                             )
-                            Text(text = "iTunes")
+                            Text(
+                                text = "iTunes",
+                                fontFamily = Constants.notsFontFamily,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.ExtraLight
+                            )
                         }
                         25.ToHeight()
                         Text(
-                            "Search from a variety of contents from Itunes store including iBooks, movies, podcast, music, music videos and audiobooks"
+                            "Search from a variety of contents from Itunes store including iBooks," +
+                                    " movies, podcast, music, music videos and audiobooks",
+                            fontFamily = Constants.notsFontFamily
                         )
                         20.ToHeight()
                         TextField(

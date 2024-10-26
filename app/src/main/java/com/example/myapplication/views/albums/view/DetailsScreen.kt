@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.common.Constants
 import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
 
 
@@ -40,8 +41,7 @@ import com.example.myapplication.views.homepage.viewmodel.HomePageViewModel
 @Composable
 
 fun DisplayScreen(viewModel: HomePageViewModel, navController: NavController) {
-//    val mapVal: Map<EntityType, ItunesModel> = viewModel.responseModels
-    var selectedIndex by remember { mutableIntStateOf(1) }
+    var selectedIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("Grid Layout", "List Layout")
     Scaffold(
         topBar = {
@@ -51,7 +51,7 @@ fun DisplayScreen(viewModel: HomePageViewModel, navController: NavController) {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("iTunes")
+                    Text("iTunes", fontFamily = Constants.notsFontFamily)
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -106,7 +106,7 @@ fun DisplayScreen(viewModel: HomePageViewModel, navController: NavController) {
                 }
             }
             when(selectedIndex){
-                0 -> AlbumGridView()
+                0 -> AlbumGridView(items = viewModel.responseModels)
                 1 -> AlbumListView(items = viewModel.responseModels)
             }
         }
