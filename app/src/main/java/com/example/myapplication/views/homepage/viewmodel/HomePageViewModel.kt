@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.common.extensions.toSmallerCase
-import com.example.myapplication.common.services.RetrofitBuilder
 import com.example.myapplication.views.homepage.data.`interface`.ITunesApiService
 import com.example.myapplication.views.homepage.data.models.EntityItemModel
 import com.example.myapplication.views.homepage.data.models.ItunesModel
@@ -16,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.State
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 enum class HomePageStatus {
     SUCCESS, FAILURE
@@ -25,13 +26,15 @@ enum class EntityType {
     Movie, Podcast, MusicVideo, Audiobook, ShortFilm, TvShow, Software, Ebook
 }
 
-class HomePageViewModel : ViewModel() {
-    private val apiService = RetrofitBuilder.retrofit
+@HiltViewModel
+class HomePageViewModel @Inject constructor(
+    iTunesService: ITunesApiService
+) : ViewModel() {
     private var _response: MutableState<HomePageState> = mutableStateOf(
         HomePageState.HomePageSuccess(null)
     )
     var stateVal: State<HomePageState> = _response
-    private val iTunesApiService: ITunesApiService = apiService.create(ITunesApiService::class.java)
+    private val iTunesApiService: ITunesApiService = iTunesService
     val entityList: List<EntityItemModel> = (listOf(
         EntityItemModel(
             id = 0,

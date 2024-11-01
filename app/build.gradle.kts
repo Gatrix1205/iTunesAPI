@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id ("kotlin-kapt")
+    id ("dagger.hilt.android.plugin")
 }
 
 android {
@@ -11,6 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.example.myapplication"
         minSdk = 24
+        //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -57,6 +60,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation (libs.hilt.android)
+    implementation(libs.hilt.android.v244)
+    kapt (libs.hilt.android.compiler.v24)
     testImplementation(libs.junit)
     implementation(libs.kotlinx.coroutines.android)
     implementation (libs.compose.v100beta01)

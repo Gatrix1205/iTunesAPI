@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.example.myapplication.R
 import com.example.myapplication.common.Constants
 import com.example.myapplication.common.extensions.ToHeight
+import com.example.myapplication.common.injection.ServiceLocator
 import com.example.myapplication.common.routes.Screen
 import com.example.myapplication.views.homepage.view.composables.EntityComposable
 import com.example.myapplication.views.homepage.viewmodel.EntityType
@@ -190,5 +191,7 @@ fun HomeScreen(viewModel: HomePageViewModel, navController: NavController? = nul
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(viewModel = HomePageViewModel())
+    HomeScreen(viewModel = HomePageViewModel(
+        iTunesService = ServiceLocator.provideAlbumService()
+    ))
 }
